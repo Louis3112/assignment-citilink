@@ -35,7 +35,7 @@ class CourseController extends Controller
         if ($user->role !== 'tutor') {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Access denied. Only tutors can create courses.'
+                'message' => 'Access denied. Only tutors can create courses'
             ], 403);
         }
 
@@ -92,7 +92,7 @@ class CourseController extends Controller
         if ($course->created_by !== Auth::id()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Access denied. You are not the owner of this course.'
+                'message' => 'Access denied. You are not the owner of this course'
             ], 403);
         }
 
@@ -119,7 +119,7 @@ class CourseController extends Controller
 
     /**
      * DELETE /api/courses/{id}
-     */
+    */
     public function destroy($id){
         $course = Course::find($id);
 
@@ -130,7 +130,7 @@ class CourseController extends Controller
         if ($course->created_by !== Auth::id()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Access denied. You are not the owner of this course.'
+                'message' => 'Access denied. You are not the owner of this course'
             ], 403);
         }
 
@@ -142,6 +142,9 @@ class CourseController extends Controller
         ]);
     }
 
+    /**
+     * GET /api/courses/{id}/students
+    */
     public function showStudents($id){
         $course = Course::find($id);
 
@@ -152,7 +155,7 @@ class CourseController extends Controller
         if ($course->created_by !== Auth::id()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Access denied. You are not the owner of this course.'
+                'message' => 'Access denied. You are not the owner of this course'
             ], 403);
         }
 

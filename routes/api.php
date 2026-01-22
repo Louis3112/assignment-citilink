@@ -17,6 +17,7 @@ Route::group(['middleware' => 'api'], function () {
         Route::post('login', [AuthController::class, 'login'])->name('login');
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
+        Route::delete('delete-user', [AuthController::class, 'deleteUser']);
     });
 
     Route::get('courses/{id}/students', [\App\Http\Controllers\CourseController::class, 'showStudents']);

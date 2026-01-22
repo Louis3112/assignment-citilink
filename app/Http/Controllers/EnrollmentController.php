@@ -27,14 +27,14 @@ class EnrollmentController extends Controller
         if ($user->enrolledCourses()->where('course_id', $id)->exists()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'You are already enrolled in this course.'
+                'message' => 'You are already enrolled in this course'
             ], 409); 
         }
 
         if ($course->created_by == $user->id) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'You cannot enroll in your own course.'
+                'message' => 'You cannot enroll in your own course'
             ], 422);
         }
         

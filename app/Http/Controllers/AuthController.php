@@ -89,6 +89,24 @@ class AuthController extends Controller
     }
 
     /**
+     * DELETE /api/auth/delete-account
+    */
+    public function deleteUser(){
+        $user = auth()->guard('api')->user();
+        $user->enrolledCourses()->detach();
+        \App\Models\Course::where('created_by', $user->id)->delete();
+
+        auth()->guard('api')->logout();
+
+        $user->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User and all related data has been deleted successfully'
+        ]);
+    }
+
+    /**
      * Response token
     */
     protected function respondWithToken($token){
