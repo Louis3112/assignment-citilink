@@ -14,11 +14,22 @@ class Course extends Model
     
     protected $fillable = [
         'title', 
-        'description'
+        'description',
+        'created_by'
     ];
+
+    public function tutor(){
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
     public function users(){
         return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'user_id')
+                    ->withTimestamps();
+    }
+
+    public function students(){
+        return $this->belongsToMany(User::class, 'enrollments')
+                    ->withPivot('enrolled_at')
                     ->withTimestamps();
     }
 }

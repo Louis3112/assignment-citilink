@@ -63,4 +63,10 @@ class User extends Authenticatable implements JWTSubject
                     ->withTimestamps() 
                     ->withPivot('enrolled_at');
     }
+
+    public function enrolledCourses(){
+        return $this->belongsToMany(Course::class, 'enrollments')
+                    ->withPivot('enrolled_at')
+                    ->withTimestamps();
+    }
 }
