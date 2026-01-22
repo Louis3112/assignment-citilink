@@ -12,5 +12,9 @@ class Enrollment extends Model
 
     protected $prefix = 'enroll';
 
-    protected $table = 'enrollments';
+    protected $fillable = [
+        'user_id',
+        'course_id',
+        'enrolled_at'
+    ];
 }
