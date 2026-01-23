@@ -55,11 +55,11 @@ Berikut langkah-langkah untuk menjalankan *project* di lokal:
    Lalu, Buka file `.env` dan sesuaikan konfigurasi database seperti berikut:
    ```bash
    DB_CONNECTION=pgsql
-    DB_HOST=127.0.0.1
-    DB_PORT=5432
-    DB_DATABASE=nama_database_anda
-    DB_USERNAME=username_postgres_anda
-    DB_PASSWORD=password_postgres_anda
+   DB_HOST=127.0.0.1
+   DB_PORT=5432
+   DB_DATABASE=nama_database_anda
+   DB_USERNAME=username_postgres_anda
+   DB_PASSWORD=password_postgres_anda
    ```
 
 4. **_Generate Application Key_**
@@ -132,8 +132,7 @@ Dengan relasi,
 
 
 ## :round_pushpin: Dokumentasi *Endpoint* API
-Untuk mempermudah pengujian, saya telah menyertakan Postman *Collection* dan *Environment*.
-
+> Untuk mempermudah pengujian, saya telah menyertakan Postman *Collection* dan *Environment*.
 1. **Import ke Postman:**
    - Buka Postman -> Klik tombol **Import**.
    - Pilih import folder.
@@ -173,3 +172,84 @@ Untuk mempermudah pengujian, saya telah menyertakan Postman *Collection* dan *En
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/courses/{id}/enroll` | `student` mendaftar ke dalam `course` (Mencegah *double enroll* dan *self enroll*) | New Feat |
 | `GET` | `/api/my-courses` | Melihat daftar riwayat kursus yang diikuti oleh suatu *user* | New Feat |
+<br>
+
+## :pencil2: Catatan Developer
+Catatan ini merangkum proses belajar dan langkah teknis yang dilakukan selama mengerjakan *assignment test* untuk posisi HCIS Developer Intern di Citilink.
+### 0. Fase Pembelajaraan 
+
+#### Cerita Saya
+<div align="justify">
+&emsp;&emsp;Ketika pertama kali menerima tugas ini pada Hari Selasa, 20 Januari 2026, 13:25. Saya segera mempersiapkan <i>youtube</i> dan <i>notes</i> saya untuk kembali mengulas materi mengenai Laravel.
+Saya segera menonton playlist <a href="https://www.youtube.com/watch?v=T1TR-RGf2Pw&list=PLFIM0718LjIW1Xb7cVj7LdAr32ATDQMdr">Belajar Laravel</a> yang dibuat oleh WPU, Pak Sandhika Galih.
+
+&emsp;&emsp;Saya berusaha untuk memahami bagian-bagian penting dari Laravel, seperti penggunaan <i>Database</i> dan <i>Migration</i>, <i>MVC</i> (tapi yang dibutuhkan saat ini adalah <i>Model</i> dan <i>Controller</i>), <i>Eloquent ORM</i>, dan penggunaan JWT.
+Untungnya, karena adanya pemahaman dasar mengenai <i>back-end</i> pada JavaScript (khususnya Hapi.js), saya menemukan banyak kesamaan konsep arsitektur dengan Laravel. Maka hal ini mempercepat proses adaptasi saya.
+
+&emsp;&emsp;Sehingga, Rabu, 21 Januari 2026, saya mulai mengerjakan tugas ini.
+</div>
+<br>
+
+### 1. Fase Perencanaan 
+#### Analisis *Requirement*
+Saya memahami bahwa tugas ini memerlukan setidaknya 3 struktur *database*
+- `users` : untuk menyimpan data pengguna
+- `courses`: untuk menyimpan data *courses* yang dibuat oleh pengguna
+- `enrollments`: untuk menjadi tabel pivot yang menghubungkan `users` dan `courses`.
+
+memerlukan setidaknya 4 *endpoint* wajib yang harus tersedia
+- `POST register user`
+- `POST login user`
+- `GET List Course`
+- `GET Detail Course`
+
+serta wajib menggunakkan
+- *Database migration*
+- *Model*
+- *Controller*
+- *Validation*
+
+Maka, saya mengambil beberapa langkah krusial untuk bisa mengembangkan aplikasi ini.
+1. Penggunaan JWT untuk autentikasi *login* dan *CRUD* `courses`.
+2. Penggunaan *custom* ID (contoh: `user-xxx`, `enroll-xxx`) agar terlihat lebih rapi dibandingkan *auto-increment* (Saya menyadari bahwa ini adalah fitur dari Laravel).
+3. `users`
+   - `users` dapat memilih *role* (`student` atau `tutor`) yang diinginkan.
+   - `users` dapat melihat semua daftar `course`.
+   - `users` dapat melihat suatu `course` secara detail.
+   - `users` dapat melihat profil data user.
+   - `users` dapat melakukan *logout* serta menghapus akun jika diperlukan.
+     
+4. `courses`
+   - `courses` hanya dapat dibuat oleh `users` dengan *role* `tutor`.
+   - `courses` menerapkan validasi kepemilikan (*ownership*), di mana hanya pembuat *course* tersebut yang mengubah (*update*) atau menghapus (*delete*) datanya.
+   - `courses` dapat melihat daftar siswa yang telah mendaftar di kelas mereka (*reporting*).
+
+5. `enrollments`
+   - `enrollments` berfungsi sebagai *pivot* antara `student` dan `courses`.
+   - `users` dengan *role* `student` dapat melakukan pendaftaran (*enroll*) pada `course` yang tersedia.
+   - Sistem memiliki validasi logis untuk mencegah duplikasi, sehingga `student` tidak dapat mendaftar dua kali pada `course` yang sama.
+   - `student` dapat melihat daftar riwayat `course` yang sedang mereka ikuti (*My Courses*).
+   - `tutor` tidak dapat mendaftar `course` nya sendiri.
+<br>
+    
+### 2. Fase Implementasi 
+#### Setup dan Pengerjaan Project
+- Dengan Instalasi Laravel, konfigurasi PostgreSQL, dan setup JWT Auth.
+- Implementasi `AuthController` untuk menangani token JWT.
+- Membuat file migration sesuai desain DB dan Model dengan relasi Eloquent (`hasMany`, `belongsToMany`).
+- Membuat *controller* berdasarkan masing-masing Model.
+- Mengadopsi standar *Resource Controller* (`index`, `store`, `show`, `update`, `destroy`) untuk membiasakan diri terhadap standar penamaan Laravel.
+- Menambahkan logika *validation* untuk ownership dan privasi *user*
+- Pembuatan *endpoint* berdasarkan analisis *requirement* dan tambahan fitur.
+- Pembuatan *unit testing* dengan menggunakkan Postman API untuk mengetahui aplikasi dapat berjalan dengan baik.
+<br>
+
+### 3. Tantangan selama pengerjaan
+Selama pengerjaan, beberapa tantangan yang saya terima:
+- Penggunaan folder yang cukup ketat dan banyak apabila dibandingkan dengan *framework* JavaScript. 
+- Memahami konvensi penamaan *Resource Controller* bawaan Laravel (`index`, `store`, `update`, dll.) yang sebelumnya tidak saya temukan dalam JavaScript .
+- Penggunaan *Eloquent ORM* dan relasi antar model, karena sebelumnya saya menggunakkan *Raw SQL* pada JavaScript.
+<br>
+
+Tetapi, semua proses tersebut saya terima dan saya sangat senang bisa mempelajari kembali materi ini lebih dalam.
+- Cornelius Louis Nathan
