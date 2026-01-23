@@ -132,17 +132,18 @@ Dengan relasi,
 
 
 ## :round_pushpin: Dokumentasi *Endpoint* API
-Untuk mempermudah pengujian, saya telah menyertakan Postman Collection dan Environment.
+Untuk mempermudah pengujian, saya telah menyertakan Postman *Collection* dan *Environment*.
 
 1. **Import ke Postman:**
    - Buka Postman -> Klik tombol **Import**.
+   - Pilih import folder.
    - Arahkan ke folder `/postman` di dalam repository ini.
-   - Pilih file `Assignment-Citilink_Collection.json` dan `Assignment_Citilink_Test_Environment.json`.
+   - Maka Postman akan secara otomatis melakukan import terhadap *Collection* dan *Environment*.
 
 2. **Setup Environment:**
-   - Pastikan environment `Assignment-Citilink_Collection` terpilih di pojok kanan atas Postman.
+   - Pastikan environment `Assignment Citilink Test Environment` terpilih di pojok kanan atas Postman.
    - Variabel `port` sudah diset ke `8000`.
-   - Lakukan `Run` langsung untuk menguji apakah
+   - Lakukan `Run` langsung untuk menguji *backend*.
 
 ### 1. *Auth User*
 

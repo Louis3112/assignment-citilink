@@ -1,0 +1,4561 @@
+{
+  "info": {
+    "_postman_id": "8a858c70-4cc5-4b2d-ba68-776c6b0d55b3",
+    "name": "Assignment Citilink Test",
+    "description": "# Course Management API - Citilink Internship Test\n\nIni adalah _collection_ yang berisi semua _API endpoints_ yang dibutuhkan untuk menguji _backend_ dari [Assignment Citilink Cornelius Louis Nathan ](https://github.com/Louis3112/assignment-citilink/edit/main/README.md) _._ Termasuk berisi error testing dan invalid palyoad\n\n_Collection_ ini berisi _user authentication_ menggunakkan JWT, CRUD _course_, dan proses _enrollment_ course.\n\n## Folder Structure\n\n#### 1\\. _Users_\n\ndengan folder di dalamnya berisi _collection_ untuk _testing_\n\n- _Tutor_\n    \n- _Student_\n    \n\nDimana, pada pengujian ini membutuhkan 2 user, yaitu\n\n- `tutor1`\n    \n- `student1`\n    \n\n### 2\\. _Courses_\n\nDimana, pada pengujian ini membutuhkan 3 user, yaitu\n\n- `tutor1`\n    \n- `tutor2`\n    \n- `student1`\n    \n\ndan membutuhkan 1 course, yaitu\n\n- `course1`\n    \n\n### 3\\. _Enrollment_\n\nDimana, pada pengujian ini membutuhkan 4 akun, yaitu\n\n- `tutor1`\n    \n- `tutor2`\n    \n- `student1`\n    \n- `student2`\n    \n\ndan membutuhkan 2 course, yaitu\n\n- `course1`\n    \n- `course2`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49011392",
+    "_collection_link": "https://go.postman.co/collection/49011392-8a858c70-4cc5-4b2d-ba68-776c6b0d55b3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Tutor",
+          "item": [
+            {
+              "name": "Register Tutor 1 with Valid Payload",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('Response status code should have 201 value', () => {\r",
+                      "   pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Message confirms registration\", function () {\r",
+                      "    pm.expect(jsonData.message).to.eql(\"User successfully registered\");\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Response structure is valid\", function () {\r",
+                      "    var user = jsonData.user;\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"user\");\r",
+                      "    pm.expect(jsonData).to.have.property(\"authorization\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"id\");\r",
+                      "    pm.expect(user.id).to.be.a(\"string\").and.not.be.empty;\r",
+                      "    pm.expect(user.id).to.match(/^user/);\r",
+                      "    \r",
+                      "    pm.expect(user).to.have.property(\"name\");\r",
+                      "    pm.expect(user.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"email\");\r",
+                      "    pm.expect(user.email).to.be.a(\"string\");\r",
+                      "    \r",
+                      "    pm.expect(user).to.have.property(\"role\");\r",
+                      "    pm.expect(user.role).to.be.a(\"string\");\r",
+                      "    pm.expect(user.role).to.eql(\"tutor\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"updated_at\");\r",
+                      "    pm.expect(user.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"created_at\");\r",
+                      "    pm.expect(user.created_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Authorization token is present and valid\", function () {\r",
+                      "    var authorization = jsonData.authorization;\r",
+                      "    pm.expect(authorization).to.have.property(\"token\");\r",
+                      "    pm.expect(authorization.token).to.be.a(\"string\").and.not.be.empty;\r",
+                      "    pm.expect(authorization.type).to.eql(\"bearer\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Set environment variable for Token\", function () {\r",
+                      "    if (jsonData.authorization && jsonData.authorization.token) {\r",
+                      "        pm.environment.set(\"jwt_token_tutor1\", jsonData.authorization.token);\r",
+                      "    } else {\r",
+                      "        throw new Error(\"Token not found in response\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{tutor1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Register New Tutor with Invalid Payload",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('Response status code should have 422 value', () => {\r",
+                      "   pm.response.to.have.status(422);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response structure is valid\", function () {\r",
+                      "    pm.expect(jsonData).to.not.be.empty;\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{badTutorPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Register Tutor 1 Again with Already Taken Email",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('Response status code should have 422 value', () => {\r",
+                      "   pm.response.to.have.status(422);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response structure is valid\", function () {\r",
+                      "    pm.expect(jsonData).to.not.be.empty;\r",
+                      "    pm.expect(jsonData).to.have.property(\"email\");\r",
+                      "    pm.expect(jsonData.email).to.include(\"The email has already been taken.\");\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{tutor1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login with Registered Tutor",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('Response status code should have 200 value', () => {\r",
+                      "   pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Access token is present and valid\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"access_token\");\r",
+                      "    pm.expect(jsonData.access_token).to.be.a(\"string\").and.not.be.empty;\r",
+                      "    \r",
+                      "    pm.expect(jsonData).to.have.property(\"token_type\");\r",
+                      "    pm.expect(jsonData.token_type).to.eql(\"bearer\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"expires_in\");\r",
+                      "    pm.expect(jsonData.expires_in).to.be.a(\"number\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"User data structure is valid\", function () {\r",
+                      "    var user = jsonData.user;\r",
+                      "    pm.expect(jsonData).to.have.property(\"user\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"id\");\r",
+                      "    pm.expect(user.id).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"name\");\r",
+                      "    pm.expect(user.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"email\");\r",
+                      "    pm.expect(user.email).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"role\");\r",
+                      "    pm.expect(user.role).to.be.a(\"string\");\r",
+                      "    pm.expect(user.role).to.eql('tutor');\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"updated_at\");\r",
+                      "    pm.expect(user.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"created_at\");\r",
+                      "    pm.expect(user.created_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Set environment variable for Token\", function () {\r",
+                      "    if (jsonData.access_token) {\r",
+                      "        pm.environment.set(\"jwt_token_tutor1\", jsonData.access_token);\r",
+                      "    } else {\r",
+                      "        throw new Error(\"Token not found in response\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{loginTutor1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login with Wrong Payload Tutor",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Response status code should have 401 value\", function () {\r",
+                      "    pm.response.to.have.status(401);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains correct error details\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                      "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                      "    pm.expect(jsonData.message).to.eql(\"Unauthorized\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"No data returned in error state\", function () {\r",
+                      "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{badLoginTutorPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Access Tutor Data",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('Response status code should have 200 value', () => {\r",
+                      "   pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response structure is valid\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"id\");\r",
+                      "    pm.expect(jsonData.id).to.be.a(\"string\").and.not.be.empty;\r",
+                      "    pm.expect(jsonData.id).to.match(/^user/);\r",
+                      "    \r",
+                      "    pm.expect(jsonData).to.have.property(\"name\");\r",
+                      "    pm.expect(jsonData.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"email\");\r",
+                      "    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+                      "    \r",
+                      "    pm.expect(jsonData).to.have.property(\"role\");\r",
+                      "    pm.expect(jsonData.role).to.be.a(\"string\");\r",
+                      "    pm.expect(jsonData.role).to.eql(\"tutor\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"updated_at\");\r",
+                      "    pm.expect(jsonData.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"created_at\");\r",
+                      "    pm.expect(jsonData.created_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_tutor1}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/me",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout from Tutor 1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Response status code should have 200 value\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains correct error details\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                      "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                      "    pm.expect(jsonData.message).to.eql(\"Successfully logged out\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"No data returned in error state\", function () {\r",
+                      "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_tutor1}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/logout",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Student",
+          "item": [
+            {
+              "name": "Register Student 1 with Valid Payload",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('Response status code should have 201 value', () => {\r",
+                      "   pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Message confirms registration\", function () {\r",
+                      "    pm.expect(jsonData.message).to.eql(\"User successfully registered\");\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Response structure is valid\", function () {\r",
+                      "    var user = jsonData.user;\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"user\");\r",
+                      "    pm.expect(jsonData).to.have.property(\"authorization\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"id\");\r",
+                      "    pm.expect(user.id).to.be.a(\"string\").and.not.be.empty;\r",
+                      "    pm.expect(user.id).to.match(/^user/);\r",
+                      "    \r",
+                      "    pm.expect(user).to.have.property(\"name\");\r",
+                      "    pm.expect(user.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"email\");\r",
+                      "    pm.expect(user.email).to.be.a(\"string\");\r",
+                      "    \r",
+                      "    pm.expect(user).to.have.property(\"role\");\r",
+                      "    pm.expect(user.role).to.be.a(\"string\");\r",
+                      "    pm.expect(user.role).to.eql(\"student\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"updated_at\");\r",
+                      "    pm.expect(user.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"created_at\");\r",
+                      "    pm.expect(user.created_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Authorization token is present and valid\", function () {\r",
+                      "    var authorization = jsonData.authorization;\r",
+                      "    pm.expect(authorization).to.have.property(\"token\");\r",
+                      "    pm.expect(authorization.token).to.be.a(\"string\").and.not.be.empty;\r",
+                      "    pm.expect(authorization.type).to.eql(\"bearer\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Set environment variable for Token\", function () {\r",
+                      "    if (jsonData.authorization && jsonData.authorization.token) {\r",
+                      "        pm.environment.set(\"jwt_token_student1\", jsonData.authorization.token);\r",
+                      "    } else {\r",
+                      "        throw new Error(\"Token not found in response\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{student1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Register New Student with Invalid Payload",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('response status code should have 422 value', () => {\r",
+                      "   pm.response.to.have.status(422);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"response structure is valid\", function () {\r",
+                      "    pm.expect(jsonData).to.not.be.empty;\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{badStudentPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Register Student 1 Again with Already Taken Email",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('Response status code should have 422 value', () => {\r",
+                      "   pm.response.to.have.status(422);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response structure is valid\", function () {\r",
+                      "    pm.expect(jsonData).to.not.be.empty;\r",
+                      "    pm.expect(jsonData).to.have.property(\"email\");\r",
+                      "    pm.expect(jsonData.email).to.include(\"The email has already been taken.\");\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{student1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login with Registered Student",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('Response status code should have 200 value', () => {\r",
+                      "   pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Access token is present and valid\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"access_token\");\r",
+                      "    pm.expect(jsonData.access_token).to.be.a(\"string\").and.not.be.empty;\r",
+                      "    \r",
+                      "    pm.expect(jsonData).to.have.property(\"token_type\");\r",
+                      "    pm.expect(jsonData.token_type).to.eql(\"bearer\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"expires_in\");\r",
+                      "    pm.expect(jsonData.expires_in).to.be.a(\"number\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"User data structure is valid\", function () {\r",
+                      "    var user = jsonData.user;\r",
+                      "    pm.expect(jsonData).to.have.property(\"user\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"id\");\r",
+                      "    pm.expect(user.id).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"name\");\r",
+                      "    pm.expect(user.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"email\");\r",
+                      "    pm.expect(user.email).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"role\");\r",
+                      "    pm.expect(user.role).to.be.a(\"string\");\r",
+                      "    pm.expect(user.role).to.eql('student');\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"updated_at\");\r",
+                      "    pm.expect(user.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "\r",
+                      "    pm.expect(user).to.have.property(\"created_at\");\r",
+                      "    pm.expect(user.created_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"set environment variable for Token\", function () {\r",
+                      "    if (jsonData.access_token) {\r",
+                      "        pm.environment.set(\"jwt_token_student1\", jsonData.access_token);\r",
+                      "    } else {\r",
+                      "        throw new Error(\"Token not found in response\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{loginStudent1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login with Wrong Payload Student",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Response status code should have 401 value\", function () {\r",
+                      "    pm.response.to.have.status(401);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains correct error details\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                      "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                      "    pm.expect(jsonData.message).to.eql(\"Unauthorized\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"No data returned in error state\", function () {\r",
+                      "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{badLoginStudentPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Access Student Data",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test('Response status code should have 200 value', () => {\r",
+                      "   pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response structure is valid\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"id\");\r",
+                      "    pm.expect(jsonData.id).to.be.a(\"string\").and.not.be.empty;\r",
+                      "    pm.expect(jsonData.id).to.match(/^user/);\r",
+                      "    \r",
+                      "    pm.expect(jsonData).to.have.property(\"name\");\r",
+                      "    pm.expect(jsonData.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"email\");\r",
+                      "    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+                      "    \r",
+                      "    pm.expect(jsonData).to.have.property(\"role\");\r",
+                      "    pm.expect(jsonData.role).to.be.a(\"string\");\r",
+                      "    pm.expect(jsonData.role).to.eql(\"student\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"updated_at\");\r",
+                      "    pm.expect(jsonData.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"created_at\");\r",
+                      "    pm.expect(jsonData.created_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_student1}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/me",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout from Student 1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Response status code should have 200 value\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains correct error details\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                      "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                      "    pm.expect(jsonData.message).to.eql(\"Successfully logged out\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"No data returned in error state\", function () {\r",
+                      "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_student1}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/logout",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "[No Test] Pre-Requisite",
+          "item": [
+            {
+              "name": "Login Tutor 1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"jwt_token_tutor1\", pm.response.json().access_token);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{loginTutor1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login Student 1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"jwt_token_student1\", pm.response.json().access_token);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{loginStudent1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Register Tutor 2",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"jwt_token_tutor2\", pm.response.json().authorization.token);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{tutor2ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create Course  1 with Auth from Tutor 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test('Response status code should have 201 value', () => {\r",
+                  "   pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response structure is valid\", function () {\r",
+                  "    var data = jsonData.data;\r",
+                  "    \r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "    \r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Course created successfully\");\r",
+                  "    \r",
+                  "    pm.expect(jsonData).to.have.property(\"data\");\r",
+                  "    \r",
+                  "    pm.expect(data).to.have.property(\"id\");\r",
+                  "    pm.expect(data.id).to.be.a(\"string\");\r",
+                  "    pm.expect(data.id).to.match(/^course-/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"title\");\r",
+                  "    pm.expect(data.title).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"description\");\r",
+                  "    pm.expect(data.description).to.be.a(\"string\");\r",
+                  "    \r",
+                  "    pm.expect(data).to.have.property(\"created_by\");\r",
+                  "    pm.expect(data.created_by).to.be.a(\"string\");\r",
+                  "    pm.expect(data.created_by).to.match(/^user-/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"updated_at\");\r",
+                  "    pm.expect(data.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"created_at\");\r",
+                  "    pm.expect(data.created_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Set environment variable for Course ID\", function () {\r",
+                  "    if (jsonData.data && jsonData.data.id) {\r",
+                  "        pm.environment.set(\"course1_Id\", jsonData.data.id);\r",
+                  "    } else {\r",
+                  "        throw new Error(\"Course Id not found in response\");\r",
+                  "    }\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{course1ValidPayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Course with Invalid Payload",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 422 value\", function () {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.equal(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{badCoursePayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Course with no Auth",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 401 value\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Unauthenticated.\");;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{course1ValidPayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Course with Auth from Student 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 403 value\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Access denied. Only tutors can create courses\");;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{course1ValidPayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Courses",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 200 value\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response 'data' is a valid Array\", function () {\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"data\");\r",
+                  "    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Data at least have 1 item\", function () {\r",
+                  "    pm.expect(jsonData.data.length).to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Item schema in the array is valid\", function () {\r",
+                  "    var item = jsonData.data[0]; \r",
+                  "    pm.expect(item).to.have.property(\"id\");\r",
+                  "    pm.expect(item.id).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"title\");\r",
+                  "    pm.expect(item.title).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"description\");\r",
+                  "    pm.expect(item.description).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"created_by\");\r",
+                  "    pm.expect(item.created_by).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"created_at\");\r",
+                  "    pm.expect(item.created_at).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"updated_at\");\r",
+                  "    pm.expect(item.updated_at).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"tutor\");\r",
+                  "    pm.expect(item.tutor).to.have.property(\"id\");\r",
+                  "    pm.expect(item.tutor).to.have.property(\"name\");\r",
+                  "    pm.expect(item.tutor).to.have.property(\"email\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specified Course",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"response status code should have 200 value\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"API Status is success\", function () {\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Data is a valid Object\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"data\");\r",
+                  "    pm.expect(jsonData.data).to.be.an(\"object\");\r",
+                  "    pm.expect(jsonData.data).to.not.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Data has expected properties and types\", function () {\r",
+                  "    var data = jsonData.data; \r",
+                  "    pm.expect(data).to.have.property(\"id\");\r",
+                  "    pm.expect(data.id).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"title\");\r",
+                  "    pm.expect(data.title).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"description\");\r",
+                  "    pm.expect(data.description).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"created_by\");\r",
+                  "    pm.expect(data.created_by).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"created_at\");\r",
+                  "    pm.expect(data.created_at).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"updated_at\");\r",
+                  "    pm.expect(data.updated_at).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"tutor\");\r",
+                  "    pm.expect(data.tutor).to.have.property(\"id\");\r",
+                  "    pm.expect(data.tutor).to.have.property(\"name\");\r",
+                  "    pm.expect(data.tutor).to.have.property(\"email\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specified Course But Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"response status code should have 404 value\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Course not found\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"no data returned in error state\", function () {\r",
+                  "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/xxx",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "xxx"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Course 1 with Auth from Tutor 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test('Response status code should have 200 value', () => {\r",
+                  "   pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response structure is valid\", function () {\r",
+                  "    var data = jsonData.data;\r",
+                  "    \r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "    \r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Course updated successfully\");\r",
+                  "    \r",
+                  "    pm.expect(jsonData).to.have.property(\"data\");\r",
+                  "    \r",
+                  "    pm.expect(data).to.have.property(\"id\");\r",
+                  "    pm.expect(data.id).to.be.a(\"string\");\r",
+                  "    pm.expect(data.id).to.match(/^course-/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"title\");\r",
+                  "    pm.expect(data.title).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"description\");\r",
+                  "    pm.expect(data.description).to.be.a(\"string\");\r",
+                  "    \r",
+                  "    pm.expect(data).to.have.property(\"created_by\");\r",
+                  "    pm.expect(data.created_by).to.be.a(\"string\");\r",
+                  "    pm.expect(data.created_by).to.match(/^user-/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"updated_at\");\r",
+                  "    pm.expect(data.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"created_at\");\r",
+                  "    pm.expect(data.created_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{editCourse1ValidPayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Course 1 with Auth from Tutor 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 403 value\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Access denied. You are not the owner of this course\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{course1ValidPayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Course 1 with Auth from Student 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 403 value\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Access denied. You are not the owner of this course\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{course1ValidPayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Course 1 with no Auth",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 401 value\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Unauthenticated.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{course1ValidPayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Course 1 with Invalid Payload",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 422 value\", function () {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{badCoursePayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Course 1 with no Auth",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 401 value\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Unauthenticated.\");;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Course 1 with Auth from Tutor 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 403 value\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Access denied. You are not the owner of this course\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{course1ValidPayload}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Course 1 with Auth from Student 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 403 value\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Access denied. You are not the owner of this course\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Course 1 with Auth from Tutor 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test('Response status code should have 200 value', () => {\r",
+                  "   pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response structure is valid\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Course deleted successfully\");\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Course 1 Again After Deleted it",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 404 value\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Course not found\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"No data returned in error state\", function () {\r",
+                  "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Enrollment",
+      "item": [
+        {
+          "name": "[No Test] Pre-Requisite",
+          "item": [
+            {
+              "name": "Login Tutor 1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"jwt_token_tutor1\", pm.response.json().access_token);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{loginTutor1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login Tutor 2",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"jwt_token_tutor2\", pm.response.json().access_token);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{loginTutor2ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login Student 1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"jwt_token_student1\", pm.response.json().access_token);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{loginStudent1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Register Student 2",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"jwt_token_student2\", pm.response.json().authorization.token);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{student2ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Course  1 from Tutor 1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"course1_Id\", pm.response.json().data.id);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_tutor1}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{course1ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/courses",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "courses"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Course  2 from Tutor 2",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"course2_Id\", pm.response.json().data.id);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_tutor2}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{{course2ValidPayload}}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:{{port}}/api/courses",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "{{port}}",
+                  "path": [
+                    "api",
+                    "courses"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Student 1 Enroll to Course 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Response status code should have 201 value\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Enrollment status is success\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Enrolled successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response data structure is valid\", function () {\r",
+                  "    var data = jsonData.data;\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"enrollment_id\");\r",
+                  "    pm.expect(data.enrollment_id).to.be.a(\"string\");\r",
+                  "    pm.expect(data.enrollment_id).to.match(/^enroll/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"course\");\r",
+                  "    pm.expect(data.course).to.have.property(\"id\");\r",
+                  "    pm.expect(data.course).to.have.property(\"title\");\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"enrolled_at\");\r",
+                  "    pm.expect(data.enrolled_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}/enroll",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}",
+                "enroll"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Student 1 Enroll Again to Course 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 409 value\", function () {\r",
+                  "    pm.response.to.have.status(409);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"You are already enrolled in this course\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}/enroll",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}",
+                "enroll"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Student 2 Enroll to Course 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Response status code should have 201 value\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Enrollment status is success\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Enrolled successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response data structure is valid\", function () {\r",
+                  "    var data = jsonData.data;\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"enrollment_id\");\r",
+                  "    pm.expect(data.enrollment_id).to.be.a(\"string\");\r",
+                  "    pm.expect(data.enrollment_id).to.match(/^enroll/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"course\");\r",
+                  "    pm.expect(data.course).to.have.property(\"id\");\r",
+                  "    pm.expect(data.course).to.have.property(\"title\");\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"enrolled_at\");\r",
+                  "    pm.expect(data.enrolled_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}/enroll",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}",
+                "enroll"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Student 2 Enroll to Course 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Response status code should have 201 value\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Enrollment status is success\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Enrolled successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response data structure is valid\", function () {\r",
+                  "    var data = jsonData.data;\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"enrollment_id\");\r",
+                  "    pm.expect(data.enrollment_id).to.be.a(\"string\");\r",
+                  "    pm.expect(data.enrollment_id).to.match(/^enroll/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"course\");\r",
+                  "    pm.expect(data.course).to.have.property(\"id\");\r",
+                  "    pm.expect(data.course).to.have.property(\"title\");\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"enrolled_at\");\r",
+                  "    pm.expect(data.enrolled_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course2_Id}}/enroll",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course2_Id}}",
+                "enroll"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor 1 Enroll to Course 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 422 value\", function () {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"You cannot enroll in your own course\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}/enroll",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}",
+                "enroll"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor 2 Enroll to Course 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Response status code should have 201 value\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Enrollment status is success\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Enrolled successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response data structure is valid\", function () {\r",
+                  "    var data = jsonData.data;\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"enrollment_id\");\r",
+                  "    pm.expect(data.enrollment_id).to.be.a(\"string\");\r",
+                  "    pm.expect(data.enrollment_id).to.match(/^enroll/);\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"course\");\r",
+                  "    pm.expect(data.course).to.have.property(\"id\");\r",
+                  "    pm.expect(data.course).to.have.property(\"title\");\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"enrolled_at\");\r",
+                  "    pm.expect(data.enrolled_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}/enroll",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}",
+                "enroll"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Student 1 Get List Enrolled Courses",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 200 value\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response 'data' is a valid Array\", function () {\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"data\");\r",
+                  "    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Data at least have 1 item\", function () {\r",
+                  "    pm.expect(jsonData.data.length).to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Item schema in the array is valid\", function () {\r",
+                  "    var item = jsonData.data[0]; \r",
+                  "    pm.expect(item).to.have.property(\"id\");\r",
+                  "    pm.expect(item.id).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"title\");\r",
+                  "    pm.expect(item.title).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"description\");\r",
+                  "    pm.expect(item.description).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"created_by\");\r",
+                  "    pm.expect(item.created_by).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"created_at\");\r",
+                  "    pm.expect(item.created_at).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"updated_at\");\r",
+                  "    pm.expect(item.updated_at).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"pivot\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"user_id\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"course_id\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"enrolled_at\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"created_at\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"updated_at\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/my-courses",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "my-courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Student 2 Get List Enrolled Courses",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 200 value\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response 'data' is a valid Array\", function () {\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"data\");\r",
+                  "    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Data at least have 2 item\", function () {\r",
+                  "    pm.expect(jsonData.data.length).to.be.above(1);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Item schema in the array is valid\", function () {\r",
+                  "    var item = jsonData.data[0]; \r",
+                  "    pm.expect(item).to.have.property(\"id\");\r",
+                  "    pm.expect(item.id).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"title\");\r",
+                  "    pm.expect(item.title).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"description\");\r",
+                  "    pm.expect(item.description).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"created_by\");\r",
+                  "    pm.expect(item.created_by).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"created_at\");\r",
+                  "    pm.expect(item.created_at).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"updated_at\");\r",
+                  "    pm.expect(item.updated_at).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(item).to.have.property(\"pivot\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"user_id\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"course_id\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"enrolled_at\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"created_at\");\r",
+                  "    pm.expect(item.pivot).to.have.property(\"updated_at\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/my-courses",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "my-courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor 1 See who Enrolled Courses 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 200 value\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response 'data' is a valid Array\", function () {\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"data\");\r",
+                  "    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Data at least have 3 item\", function () {\r",
+                  "    pm.expect(jsonData.data.length).to.be.above(2);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Item schema in the array is valid\", function () {\r",
+                  "    var data = jsonData.data[0]; \r",
+                  "    pm.expect(data).to.have.property(\"id\");\r",
+                  "    pm.expect(data.id).to.be.a(\"string\");\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"name\");\r",
+                  "    pm.expect(data.name).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"email\");\r",
+                  "    pm.expect(data.email).to.be.a('string');\r",
+                  "\r",
+                  "    pm.expect(data).to.have.property(\"pivot\");\r",
+                  "    pm.expect(data.pivot).to.have.property(\"user_id\");\r",
+                  "    pm.expect(data.pivot).to.have.property(\"course_id\");\r",
+                  "    pm.expect(data.pivot).to.have.property(\"enrolled_at\");\r",
+                  "    pm.expect(data.pivot).to.have.property(\"created_at\");\r",
+                  "    pm.expect(data.pivot).to.have.property(\"updated_at\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}/students",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor 2 See who Enrolled Courses 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 403 value\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"error\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Access denied. You are not the owner of this course\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/courses/{{course1_Id}}/students",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "courses",
+                "{{course1_Id}}",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clearup Data",
+      "item": [
+        {
+          "name": "Delete Tutor 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 200 value\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"User and all related data has been deleted successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"No data returned in error state\", function () {\r",
+                  "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/auth/delete-user",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "auth",
+                "delete-user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Tutor 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 200 value\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"User and all related data has been deleted successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"No data returned in error state\", function () {\r",
+                  "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_tutor2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/auth/delete-user",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "auth",
+                "delete-user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Student 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 200 value\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"User and all related data has been deleted successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"No data returned in error state\", function () {\r",
+                  "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student1}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/auth/delete-user",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "auth",
+                "delete-user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Student 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Response status code should have 200 value\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains correct error details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                  "    pm.expect(jsonData.message).to.eql(\"User and all related data has been deleted successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"No data returned in error state\", function () {\r",
+                  "    pm.expect(jsonData).to.not.have.property(\"data\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token_student2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:{{port}}/api/auth/delete-user",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "auth",
+                "delete-user"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
